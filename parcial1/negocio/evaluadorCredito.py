@@ -8,20 +8,20 @@ class EvaluadorCredito(IEvaluadorCredito):
 
     def evaluar(self, s):
 
-        # Validar plazo (regla 1)
+        # Revisar plazo:
         if s.plazo < 1 or s.plazo > 72:
             return Resultado(False, "Plazo inválido. Debe estar entre 1 y 72 meses")
 
-        # Calcular balanza (regla 2)
+        # Balanza:
         balanza = s.balanza()
 
         if balanza <= 0:
             return Resultado(False, f"Balanza negativa o cero ({balanza})")
 
-        # Calcular relación crédito/balanza (regla 3)
+        # Relación credito balanza:
         relacion = s.relacion()
 
-        # Regla de rechazo automático
+        # Rechazar solicitud:
         if relacion >= 0.95:
             return Resultado(
                 False,
@@ -29,7 +29,7 @@ class EvaluadorCredito(IEvaluadorCredito):
             )
 
 
-        # Determinar puntaje mínimo requerido
+        # Puntajes:
         if 0.7 <= relacion < 0.95:
             minimo = 800
         elif 0.4 <= relacion < 0.7:
@@ -37,13 +37,12 @@ class EvaluadorCredito(IEvaluadorCredito):
         else:
             minimo = 400
 
-        # Consultar central de riesgo
         puntaje = self.central.obtener_puntaje(s.documento)
 
         if puntaje is None:
             return Resultado(False, "Documento no encontrado en central de riesgo")
 
-        # Evaluar aprobación
+        # Aprobar:
         aprobado = puntaje >= minimo
         estado = "APROBADO" if aprobado else "RECHAZADO"
 
