@@ -2,7 +2,7 @@
 
 ## Autores
 - Manuel Jose Velez Montoya  
-- Mateo Cano  
+- Mateo Cano Rendon 
 
 ---
 
